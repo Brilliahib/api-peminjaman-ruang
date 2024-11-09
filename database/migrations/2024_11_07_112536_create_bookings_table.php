@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->time('start_time'); 
             $table->time('end_time');  
-            $table->boolean('is_approved')->default(false); 
+            $table->boolean('is_approved')->default(false);
+            $table->string('status_surat')->default('Unduh');
             $table->timestamps();
         });
     }

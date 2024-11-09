@@ -16,5 +16,9 @@ class Booking extends Model
     
     public function room() {
         return $this->belongsTo(Room::class);
-    }    
+    }
+    
+    public function students() {
+        return $this->belongsToMany(Student::class, 'booking_students');
+    }
 }

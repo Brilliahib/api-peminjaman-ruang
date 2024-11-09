@@ -59,8 +59,7 @@ class AdminController extends Controller
 
     public function getAllBookings()
     {
-        $bookings = Booking::with(['user', 'room'])
-            ->get(['user_id', 'room_id', 'start_time', 'end_time', 'name', 'is_approved']);
+        $bookings = Booking::with(['user', 'room', 'students'])->get(['id', 'user_id', 'room_id', 'start_time', 'end_time', 'name', 'is_approved', 'status_surat', 'created_at', 'updated_at']);
 
         return response()->json(
             [
@@ -81,6 +80,53 @@ class AdminController extends Controller
                 'statusCode' => 200,
                 'message' => 'Data booking berhasil diambil',
                 'data' => $rooms,
+            ],
+            200,
+        );
+    }
+
+    public function detailRoom($id)
+    {
+        $room = Room::find($id);
+
+        if (!$room) {
+            return response()->json(
+                [
+                    'statusCode' => 404,
+                    'message' => 'Ruangan tidak ditemukan',
+                    'data' => null,
+                ],
+                404,
+            );
+        }
+
+        return response()->json(
+            [
+                'statusCode' => 200,
+                'message' => 'Detail ruangan berhasil diambil',
+                'data' => $room,
+            ],
+            200,
+        );
+    }
+
+    public function updateStatusSurat(Request $request, $id)
+    {
+        $request->validate([
+            'status_surat' => 'required|in:Unduh,Diajukan,Kadep', 
+        ]);
+
+        $booking = Booking::findOrFail($id);
+
+        $booking->update([
+            'status_surat' => $request->status_surat,
+        ]);
+
+        return response()->json(
+            [
+                'statusCode' => 200,
+                'message' => 'Status surat berhasil diperbarui',
+                'data' => $booking,
             ],
             200,
         );
